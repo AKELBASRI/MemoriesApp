@@ -1,12 +1,15 @@
-const express = require('express');
+const express = require("express");
 //import bodyParser from 'body-parser';
-const mongoose = require('mongoose');
-const cors = require('cors');
+const mongoose = require("mongoose");
+const cors = require("cors");
+const postRoutes = require("./routes/posts.js");
 
-const app =express();
-app.use(express.json({ limit: '50mb',extended:true }));
-app.use(express.urlencoded({ limit: '50mb',extended:true }));
+const app = express();
+app.use("/posts", postRoutes);
+app.use(express.json({ limit: "50mb", extended: true }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
+
 require("dotenv").config();
 const port = process.env.PORT || 3000;
 mongoose
@@ -19,7 +22,8 @@ mongoose
     app.listen(port, () => console.log(`app is running on port ${port}`));
     console.log("db connected");
   })
-  .catch((err) => {console.log(err.message);});
-
+  .catch((err) => {
+    console.log(err.message);
+  });
 
 //mongoose.set('useFindAndModify',false);
