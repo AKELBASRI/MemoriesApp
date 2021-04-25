@@ -13,7 +13,7 @@ const App = () => {
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);
-  const [currentId, setCurrentId] = useState(null);
+  const [currentId, setCurrentId] = useState(0);
 
   return (
     <Container maxWidth="lg">
@@ -37,10 +37,10 @@ const App = () => {
             spacing={3}
           >
             <Grid item xs={12} sm={7}>
-              <Posts />
+              <Posts   setCurrentId={setCurrentId}/>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Form />
+              <Form  currentId={currentId}  setCurrentId={setCurrentId}/>
             </Grid>
           </Grid>
         </Container>

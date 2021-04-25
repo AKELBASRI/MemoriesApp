@@ -1,11 +1,12 @@
-const { Mongoose } = require("mongoose");
+const express =require( 'express');
 const PostMessage = require("../models/postMessage");
-
+const router = express.Router();
 const getPosts = async (req, res) => {
+  
   try {
     const postMessages = await PostMessage.find();
-    console.log(postMessages);
-    res.status(200).json(postMessages);
+    return(
+    res.status(200).json(postMessages));
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -22,14 +23,19 @@ const createPost = async (req, res) => {
   }
 };
 const updatePost = async (req, res) => {
-  const { id: _id } = req.params;
-  const post = req.body;
-  if (!Mongoose.Types.ObjectId.isValid(_id))
-    return res.status(404).send("No post with that id");
+  
+  const { id } = req.params;
+  const { title, message, creator, selectedFile, tags } = req.body;
+  if(id!=undefined){
+    if (!require( 'mongoose').Types.ObjectId.isValid(id.toString())) {
+      return res.status(404).send(`No post with id: ${id}`);
+    }
+  }
 
-  const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, {
-    new: true,
-  });
+  const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
+
+  await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
+
   res.json(updatedPost);
 };
-module.exports = { getPosts, createPost, updatePost };
+module.exports = { getPosts, createPost, updatePost ,router};
