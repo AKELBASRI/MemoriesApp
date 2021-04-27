@@ -1,12 +1,10 @@
-const express =require( 'express');
+const express = require("express");
 const PostMessage = require("../models/postMessage");
 const router = express.Router();
 const getPosts = async (req, res) => {
-  
   try {
     const postMessages = await PostMessage.find();
-    return(
-    res.status(200).json(postMessages));
+    return res.status(200).json(postMessages);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -23,11 +21,10 @@ const createPost = async (req, res) => {
   }
 };
 const updatePost = async (req, res) => {
-  
   const { id } = req.params;
   const { title, message, creator, selectedFile, tags } = req.body;
-  if(id!=undefined){
-    if (!require( 'mongoose').Types.ObjectId.isValid(id.toString())) {
+  if (id != undefined) {
+    if (!require("mongoose").Types.ObjectId.isValid(id.toString())) {
       return res.status(404).send(`No post with id: ${id}`);
     }
   }
@@ -38,4 +35,12 @@ const updatePost = async (req, res) => {
 
   res.json(updatedPost);
 };
-module.exports = { getPosts, createPost, updatePost ,router};
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+  if (!require("mongoose").Types.ObjectId.isValid(id.toString())) {
+    return res.status(404).send(`No post with id: ${id}`);
+  }
+  await PostMessage.findByIdAndRemove(id);
+  res.json({ message: "Post deleted successfully" });
+};
+module.exports = { getPosts, createPost, updatePost, router, deletePost };
